@@ -46,36 +46,35 @@ public:
     Suit trump = upcard.get_suit();
     hand.push_back(upcard);
 
-    int lowest = 0;
-    for (int i = 1; i < (int)hand.size(); i++) {
+    size_t lowest = 0;
+    for (size_t i = 1; i < hand.size(); i++) {
       if (Card_less(hand[i], hand[lowest], trump)) {
         lowest = i;
       }
     }
-
     hand.erase(hand.begin() + lowest);
   }
 
   Card lead_card(Suit trump) override {
     int best = -1;
 
-    for (int i = 0; i < (int)hand.size(); i++) {
+    for (size_t i = 0; i < hand.size(); i++) {
       if (!hand[i].is_trump(trump)) {
         if (best == -1 || hand[best] < hand[i]) {
-          best = i;
+      best = i;
         }
       }
     }
 
     if (best == -1) {
       best = 0;
-      for (int i = 1; i < (int)hand.size(); i++) {
+      for (size_t i = 1; i < hand.size(); i++) {
         if (Card_less(hand[best], hand[i], trump)) {
           best = i;
         }
       }
     }
-
+  
     Card result = hand[best];
     hand.erase(hand.begin() + best);
     return result;
@@ -85,8 +84,8 @@ public:
     Suit ledSuit = ledCard.get_suit(trump);
 
     bool canFollow = false;
-    for (const Card &c : hand) {
-      if (c.get_suit(trump) == ledSuit) {
+    for (size_t i = 0; i < hand.size(); i++) {
+      if (hand[i].get_suit(trump) == ledSuit) {
         canFollow = true;
         break;
       }
@@ -96,15 +95,17 @@ public:
 
     if (canFollow) {
       pick = -1;
-      for (int i = 0; i < (int)hand.size(); i++) {
+      for (size_t i = 0; i < hand.size(); i++) {
         if (hand[i].get_suit(trump) == ledSuit) {
           if (pick == -1 || Card_less(hand[pick], hand[i], ledCard, trump)) {
             pick = i;
           }
         }
       }
-    } else {
-      for (int i = 1; i < (int)hand.size(); i++) {
+    }
+    
+    else {
+      for (size_t i = 1; i < hand.size(); i++) {
         if (Card_less(hand[i], hand[pick], ledCard, trump)) {
           pick = i;
         }
@@ -122,8 +123,8 @@ private:
 
   int countGoodCards(Suit trump) const {
     int count = 0;
-    for (const Card &c : hand) {
-      if (c.is_trump(trump) && c.is_face_or_ace()) {
+    for (int i = 0; i < hand.size(); i++) {
+      if (hand[i].is_trump(trump) && hand[i].is_face_or_ace()) {
         count++;
       }
     }
@@ -152,7 +153,9 @@ public:
     string decision;
     cin >> decision;
 
-    if (decision == "pass") return false;
+    if (decision == "pass") {
+      return false;
+    }
 
     orderUpSuit = string_to_suit(decision);
     return true;
@@ -166,7 +169,9 @@ public:
     int idx;
     cin >> idx;
 
-    if (idx == -1) return;
+    if (idx == -1) {
+      return;
+    }
 
     hand.erase(hand.begin() + idx);
     hand.push_back(upcard);
@@ -194,15 +199,19 @@ private:
   vector<Card> hand;
 
   void printHand() const {
-    for (int i = 0; i < (int)hand.size(); i++) {
+    for (size_t i = 0; i < hand.size(); i++) {
       cout << "Human player " << name << "'s hand: " << "[" << i << "] " << hand[i] << endl;
     }
   }
 };
 
 Player * Player_factory(const string &name, const string &strategy) {
-  if (strategy == "Simple") return new SimplePlayer(name);
-  if (strategy == "Human") return new HumanPlayer(name);
+  if (strategy == "Simple") {
+    return new SimplePlayer(name);
+  }
+  if (strategy == "Human") {
+    return new HumanPlayer(name);
+  }
   assert(false);
   return nullptr;
 }

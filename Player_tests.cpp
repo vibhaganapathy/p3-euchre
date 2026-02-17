@@ -11,7 +11,7 @@ TEST(getName) {
 }
 
 TEST(round1Order) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Card upcard(NINE, HEARTS);
 
   p->add_card(Card(ACE, HEARTS));
@@ -28,7 +28,7 @@ TEST(round1Order) {
 }
 
 TEST(round1Pass) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Card upcard(TEN, DIAMONDS);
 
   p->add_card(Card(ACE, DIAMONDS));
@@ -45,7 +45,7 @@ TEST(round1Pass) {
 }
 
 TEST(leftBowerCounts) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Card upcard(NINE, DIAMONDS);
 
   p->add_card(Card(JACK, HEARTS)); 
@@ -62,7 +62,7 @@ TEST(leftBowerCounts) {
 }
 
 TEST(round2Order) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Card upcard(NINE, HEARTS);
 
   p->add_card(Card(KING, DIAMONDS));
@@ -79,7 +79,7 @@ TEST(round2Order) {
 }
 
 TEST(round2Pass) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Card upcard(NINE, HEARTS);
 
   p->add_card(Card(NINE, SPADES));
@@ -113,7 +113,7 @@ TEST(screwDealer) {
 }
 
 TEST(discardLowest) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
 
   p->add_card(Card(NINE, SPADES));
   p->add_card(Card(TEN, SPADES));
@@ -133,7 +133,7 @@ TEST(discardLowest) {
 }
 
 TEST(leadNonTrump) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Suit trump = HEARTS;
 
   p->add_card(Card(ACE, CLUBS));
@@ -149,7 +149,7 @@ TEST(leadNonTrump) {
 }
 
 TEST(leadTrumpOnly) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Suit trump = DIAMONDS;
 
   p->add_card(Card(NINE, DIAMONDS));
@@ -165,7 +165,7 @@ TEST(leadTrumpOnly) {
 }
 
 TEST(playFollow) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Suit trump = HEARTS;
 
   p->add_card(Card(NINE, CLUBS));
@@ -183,7 +183,7 @@ TEST(playFollow) {
 }
 
 TEST(playLowest) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Suit trump = CLUBS;
 
   p->add_card(Card(ACE, SPADES));
@@ -201,7 +201,7 @@ TEST(playLowest) {
 }
 
 TEST(leftBowerFollow) {
-  Player *p = Player_factory("Bob", "Simple");
+  Player *p = Player_factory("Alice", "Simple");
   Suit trump = HEARTS;
 
   p->add_card(Card(JACK, DIAMONDS));
