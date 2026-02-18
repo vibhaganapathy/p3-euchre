@@ -105,3 +105,185 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 //   operator>=
 //   operator==
 //   operator!=
+
+
+// Initialize to 2 of spades
+Card::Card(){
+  rank = TWO;
+  suit = SPADES;
+}
+
+// Initialize specifically
+Card::Card(Rank rank_in, Suit suit_in){
+  rank = rank_in;
+  suit = suit_in;
+}
+
+// Get rank
+Rank Card::get_rank() const{
+  return rank;
+}
+
+// Get suit 
+Suit Card::get_suit() const{
+  return suit;
+}
+
+// Get suit
+Suit Card::get_suit(Suit trump) const{
+  if (is_left_bower(trump)){
+    return trump;
+  }
+  return suit;
+}
+
+// Check if card is a face card
+bool Card::is_face_or_ace() const{
+  return (rank==JACK || rank==QUEEN || rank==KING || rank==ACE);
+}
+
+// Check if card is jack of trump suit
+bool Card::is_right_bower(Suit trump) const{
+  return (rank==JACK && suit==trump);
+}
+
+// Check if card is jack of next suit
+bool Card::is_left_bower(Suit trump) const{
+  return (rank==JACK && suit==Suit_next(trump));
+}
+
+// Check if card is trump
+bool Card::is_trump(Suit trump) const{
+  return (suit==trump || is_left_bower(trump));
+}
+
+
+// Operator Overloading
+
+// Print card to stream
+std::ostream& operator<<(std::ostream &os, const Card &card){
+  os << card.get_rank() << " of " << card.get_suit();
+  return os;
+}
+
+// Read card from stream
+std::istream& operator>>(std::istream &is, Card &card){
+  Rank r;
+  string of;
+  Suit s;
+  is >> r >> of >> s;
+  card = Card(r, s);
+  return is;
+}
+
+// lhs < rhs
+bool operator<(const Card &lhs, const Card &rhs){
+  if (lhs.get_suit() != rhs.get_suit()){
+    return (lhs.get_suit() < rhs.get_suit());
+  }
+  return (lhs.get_rank() < rhs.get_rank());
+}
+
+// lhs <= rhs
+bool operator<=(const Card &lhs, const Card &rhs){
+  return (lhs < rhs || lhs == rhs);
+}
+
+// lhs > rhs
+bool operator>(const Card &lhs, const Card &rhs){
+  return !(lhs <= rhs);
+}
+
+// lhs >= rhs
+bool operator>=(const Card &lhs, const Card &rhs){
+  return !(lhs < rhs);
+}
+
+// lhs = rhs
+bool operator==(const Card &lhs, const Card &rhs){
+  return (lhs.get_rank() == rhs.get_rank() && lhs.get_suit() == rhs.get_suit());
+}
+
+// lhs != rhs
+bool operator!=(const Card &lhs, const Card &rhs){
+  return !(lhs == rhs);
+}
+
+
+// Next suit
+Suit Suit_next(Suit suit){
+  if (suit == HEARTS){
+    return DIAMONDS;
+  }
+  else if (suit == DIAMONDS){
+    return HEARTS;
+  }
+  else if (suit == SPADES){
+    return CLUBS;
+  }
+  else{
+    return SPADES;
+  }
+}
+
+// Check if bowers covered (a < b)
+bool cover_bowers(const Card &a, const Card &b, Suit trump){
+  if (!a.is_right_bower(trump) && b.is_right_bower(trump)){
+    return true;
+  }
+  else if (!a.is_left_bower(trump) && b.is_left_bower(trump)){
+    return true;
+  }
+  return false;
+}
+
+// a < b
+bool Card_less(const Card &a, const Card &b, Suit trump){
+  // Check for bowers first
+  if (cover_bowers(a, b, trump)){
+    return true;
+  }
+
+  if (a.is_trump(trump) == b.is_trump(trump)){
+    return (a.get_rank() < b.get_rank());
+  }
+  else if (!a.is_trump(trump) && b.is_trump(trump)){
+    return true;
+  }
+  return false;
+}
+
+// a < b
+bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
+  // Check for bowers first
+  if (cover_bowers(a, b, trump)){
+    return true;
+  }
+
+  // Both are trump
+  if (a.is_trump(trump) && b.is_trump(trump)){
+    return (a.get_rank() < b.get_rank());
+  }
+  // Both are led
+  else if (a.get_suit() == led_card.get_suit() && b.get_suit() == led_card.get_suit()){
+    return (a.get_rank() < b.get_rank());
+  }
+  // Neither are trump nor led
+  else if ((!a.is_trump(trump) && !b.is_trump(trump)) && (a.get_suit() != led_card.get_suit()) && (b.get_suit() != led_card.get_suit())) {
+    return (a.get_rank() < b.get_rank());
+  }
+  // Only b is trump
+  else if (!a.is_trump(trump) && b.is_trump(trump)){
+    return true;
+  }
+  // Only b is led
+  else if (!a.is_trump(trump) && b.get_suit() == led_card.get_suit()){
+    return true; 
+  }
+  return false;
+}
+
+
+
+
+
