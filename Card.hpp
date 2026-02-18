@@ -149,6 +149,8 @@ bool operator!=(const Card &lhs, const Card &rhs);
 //EFFECTS returns the next suit, which is the suit of the same color
 Suit Suit_next(Suit suit);
 
+bool cover_bowers(const Card &a, const Card &b, Suit trump);
+
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
 bool Card_less(const Card &a, const Card &b, Suit trump);

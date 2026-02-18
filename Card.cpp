@@ -226,21 +226,13 @@ Suit Suit_next(Suit suit){
   }
 }
 
-// Check if bowers covered (a < b)
-bool cover_bowers(const Card &a, const Card &b, Suit trump){
+// a < b
+bool Card_less(const Card &a, const Card &b, Suit trump){
+  // Check for bowers first
   if (!a.is_right_bower(trump) && b.is_right_bower(trump)){
     return true;
   }
   else if (!a.is_left_bower(trump) && b.is_left_bower(trump)){
-    return true;
-  }
-  return false;
-}
-
-// a < b
-bool Card_less(const Card &a, const Card &b, Suit trump){
-  // Check for bowers first
-  if (cover_bowers(a, b, trump)){
     return true;
   }
 
@@ -256,7 +248,10 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
 // a < b
 bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
   // Check for bowers first
-  if (cover_bowers(a, b, trump)){
+  if (!a.is_right_bower(trump) && b.is_right_bower(trump)){
+    return true;
+  }
+  else if (!a.is_left_bower(trump) && b.is_left_bower(trump)){
     return true;
   }
 
