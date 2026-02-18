@@ -11,6 +11,21 @@ TEST(test_card_ctor) {
     ASSERT_EQUAL(HEARTS, c.get_suit());
 }
 
+TEST(test_get_suit){
+    Card jack_hearts(JACK, HEARTS);
+    Card jack_diamonds(JACK, DIAMONDS);
+
+    // Without trump
+    ASSERT_EQUAL(HEARTS, jack_hearts.get_suit());
+    ASSERT_EQUAL(DIAMONDS, jack_diamonds.get_suit());
+
+    // With trump
+    ASSERT_EQUAL(HEARTS, jack_hearts.get_suit(HEARTS));
+    ASSERT_EQUAL(HEARTS, jack_diamonds.get_suit(HEARTS));
+    ASSERT_EQUAL(DIAMONDS, jack_diamonds.get_suit(DIAMONDS));
+    ASSERT_EQUAL(DIAMONDS, jack_diamonds.get_suit(CLUBS));
+}
+
 TEST(test_bowers){
     Card jack_clubs(JACK, CLUBS);
     Card jack_spades(JACK, SPADES);
