@@ -218,5 +218,71 @@ TEST(leftBowerFollow) {
   delete p;
 }
 
+TEST(discardSpade) {
+  Player *p = Player_factory("Alice", "Simple");
+  Suit trump = HEARTS;
+
+  p->add_card(Card(NINE, SPADES));  
+  p->add_card(Card(ACE, CLUBS));
+  p->add_card(Card(KING, CLUBS));
+  p->add_card(Card(QUEEN, DIAMONDS));
+  p->add_card(Card(KING, DIAMONDS));
+
+  Card upcard(NINE, trump);
+  p->add_and_discard(upcard);
+
+  Card led(TEN, SPADES);
+  Card played = p->play_card(led, trump);
+
+  ASSERT_NOT_EQUAL(played.get_suit(trump), SPADES);
+
+  delete p;
+}
+
+TEST(discardUpcard) {
+  Player *p = Player_factory("Alice", "Simple");
+  Suit trump = HEARTS;
+
+  p->add_card(Card(TEN, trump));
+  p->add_card(Card(QUEEN, trump));
+  p->add_card(Card(KING, trump));
+  p->add_card(Card(ACE, trump));
+  p->add_card(Card(JACK, trump));
+
+  Card upcard(NINE, trump);
+  p->add_and_discard(upcard);
+
+  Card c1 = p->lead_card(trump);
+  Card c2 = p->lead_card(trump);
+  Card c3 = p->lead_card(trump);
+  Card c4 = p->lead_card(trump);
+  Card c5 = p->lead_card(trump);
+
+  ASSERT_EQUAL(c5, Card(TEN, trump));
+
+  delete p;
+}
+
+TEST(discardTrump) {
+  Player *p = Player_factory("Alice", "Simple");
+  Suit trump = DIAMONDS;
+
+  p->add_card(Card(NINE, SPADES)); 
+  p->add_card(Card(TEN, SPADES));
+  p->add_card(Card(QUEEN, CLUBS));
+  p->add_card(Card(KING, CLUBS));
+  p->add_card(Card(ACE, HEARTS));
+
+  Card upcard(NINE, trump); 
+  p->add_and_discard(upcard);
+
+  Card led(ACE, trump);
+  Card played = p->play_card(led, trump);
+
+  ASSERT_EQUAL(played.get_suit(trump), trump);
+
+  delete p;
+}
+
 TEST_MAIN()
 
