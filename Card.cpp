@@ -178,11 +178,11 @@ std::istream& operator>>(std::istream &is, Card &card){
 }
 
 // lhs < rhs
-bool operator<(const Card &lhs, const Card &rhs){
-  if (lhs.get_suit() != rhs.get_suit()){
-    return (lhs.get_suit() < rhs.get_suit());
+bool operator<(const Card &lhs, const Card &rhs) {
+  if (lhs.get_rank() != rhs.get_rank()) {
+    return lhs.get_rank() < rhs.get_rank();
   }
-  return (lhs.get_rank() < rhs.get_rank());
+  return lhs.get_suit() < rhs.get_suit();
 }
 
 // lhs <= rhs
@@ -228,55 +228,71 @@ Suit Suit_next(Suit suit){
 }
 
 // a < b
-bool Card_less(const Card &a, const Card &b, Suit trump){
-  // Check for bowers first
-  if (b.is_right_bower(trump)){
-    return true;
-  }
-  else if (a.is_right_bower(trump)){
+bool Card_less(const Card &a, const Card &b, Suit trump) {
+  // Checking equality and bowers
+  if (a == b) {
     return false;
   }
 
-  // Both are trump
-  if (a.get_suit(trump) == b.get_suit(trump)){
-    return (a.get_rank() < b.get_rank());
+  // Right bower 
+  if (a.is_right_bower(trump)) {
+    return false;
   }
-  // Only b is trump
-  else if (!a.is_trump(trump) && b.is_trump(trump)){
+  else if (b.is_right_bower(trump)) {
     return true;
   }
+
+  // Left bower 
+  if (a.is_left_bower(trump)) {
+    return false;
+  }
+  else if (b.is_left_bower(trump)) {
+    return true;
+  }
+
+  bool a_trump = a.is_trump(trump);
+  bool b_trump = b.is_trump(trump);
+
+  // Only b is trump
+  if (a_trump != b_trump) {
+    return (!a_trump && b_trump);
+  }
+
   // Neither are trump
-  return (a.get_rank() < b.get_rank());
+  return a < b;
 }
 
+
 // a < b
-bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump){
-  // Check for bowers first
-  if (b.is_right_bower(trump)){
-    return true;
-  }
-  else if (a.is_right_bower(trump)){
+bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) {
+  // Checking equality and bowers
+  if (a == b) {
     return false;
+  }
+  bool a_trump = a.is_trump(trump);
+  bool b_trump = b.is_trump(trump);
+
+  // Only b is trump
+  if (a_trump != b_trump) {
+    return (!a_trump && b_trump);
   }
 
   // Both are trump
-  if (a.get_suit(trump) && b.get_suit(trump)){
-    return (a.get_rank() < b.get_rank());
+  if (a_trump && b_trump) {
+    return Card_less(a, b, trump);
   }
-  // Both are led
-  else if (a.get_suit() == led_card.get_suit() && b.get_suit() == led_card.get_suit()){
-    return (a.get_rank() < b.get_rank());
-  }
-  // Only b is trump
-  else if (!a.is_trump(trump) && b.is_trump(trump)){
-    return true;
-  }
-  // Only b is led
-  else if (!a.is_trump(trump) && b.get_suit(trump) == led_card.get_suit()){
-    return true; 
-  }
+
   // Neither are trump nor led
-  return (a.get_rank() < b.get_rank());
+  Suit led_suit = led_card.get_suit(trump);
+  bool a_follows = (a.get_suit(trump) == led_suit);
+  bool b_follows = (b.get_suit(trump) == led_suit);
+
+  if (a_follows != b_follows) {
+    return (!a_follows && b_follows);
+  }
+
+  // Neither are trump nor led
+  return a < b;
 }
 
 
