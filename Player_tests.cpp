@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "unit_test_framework.hpp"
+#include <iostream>
 
 using namespace std;
 
@@ -194,9 +195,9 @@ TEST(playLowest) {
   Card led(NINE, HEARTS);
   Card played = p->play_card(led, trump);
 
-  delete p;
-
   ASSERT_EQUAL(played, Card(TEN, SPADES));
+
+  delete p;
 }
 
 TEST(leftBowerFollow) {
@@ -217,61 +218,38 @@ TEST(leftBowerFollow) {
   delete p;
 }
 
-TEST(discardSpade) {
+TEST(discardLeftBower) {
   Player *p = Player_factory("Alice", "Simple");
   Suit trump = HEARTS;
 
-  p->add_card(Card(NINE, SPADES));  
-  p->add_card(Card(ACE, CLUBS));
+  p->add_card(Card(JACK, DIAMONDS));
+  p->add_card(Card(NINE, SPADES));
+  p->add_card(Card(TEN, SPADES));
+  p->add_card(Card(QUEEN, CLUBS));
   p->add_card(Card(KING, CLUBS));
-  p->add_card(Card(QUEEN, DIAMONDS));
-  p->add_card(Card(KING, DIAMONDS));
 
   Card upcard(NINE, trump);
   p->add_and_discard(upcard);
 
-  Card led(TEN, SPADES);
+  Card led(ACE, trump);
   Card played = p->play_card(led, trump);
 
-  ASSERT_NOT_EQUAL(played.get_suit(trump), SPADES);
+  ASSERT_TRUE(played.is_left_bower(trump));
 
   delete p;
 }
 
-TEST(discardUpcard) {
-  Player *p = Player_factory("Alice", "Simple");
-
-  Card upcard(TEN, CLUBS);
-
-  p->add_card(Card(ACE, SPADES));
-  p->add_card(Card(KING, SPADES));
-  p->add_card(Card(QUEEN, SPADES));
-  p->add_card(Card(JACK, SPADES));
-  p->add_card(Card(NINE, DIAMONDS));
-
-  p->add_and_discard(upcard);
-  
-  Card led(ACE, DIAMONDS);
-  Card played = p->play_card(led, CLUBS);
-
-  delete p; 
-
-  ASSERT_EQUAL(played, Card(JACK, SPADES)); 
-  
-}
-
-
-TEST(discardTrump) {
+TEST(discardTrumpAware) {
   Player *p = Player_factory("Alice", "Simple");
   Suit trump = DIAMONDS;
 
-  p->add_card(Card(NINE, SPADES)); 
+  p->add_card(Card(NINE, SPADES));  
   p->add_card(Card(TEN, SPADES));
   p->add_card(Card(QUEEN, CLUBS));
   p->add_card(Card(KING, CLUBS));
   p->add_card(Card(ACE, HEARTS));
 
-  Card upcard(NINE, trump); 
+  Card upcard(NINE, trump);
   p->add_and_discard(upcard);
 
   Card led(ACE, trump);
@@ -282,5 +260,49 @@ TEST(discardTrump) {
   delete p;
 }
 
+TEST(discardUpcard) {
+  Player *p = Player_factory("Alice", "Simple");
+  Suit trump = HEARTS;
+
+  p->add_card(Card(TEN, trump));
+  p->add_card(Card(QUEEN, trump));
+  p->add_card(Card(KING, trump));
+  p->add_card(Card(ACE, trump));
+  p->add_card(Card(JACK, trump)); 
+
+  Card upcard(NINE, trump); 
+  p->add_and_discard(upcard);
+
+  p->lead_card(trump);
+  p->lead_card(trump);
+  p->lead_card(trump);
+  p->lead_card(trump);
+  Card last = p->lead_card(trump);
+
+  ASSERT_EQUAL(last, Card(TEN, trump));
+
+  delete p;
+}
+
+TEST(discardTrump) {
+  Player *p = Player_factory("Alice", "Simple");
+  Suit trump = HEARTS;
+
+  p->add_card(Card(JACK, HEARTS));
+  p->add_card(Card(JACK, DIAMONDS)); 
+  p->add_card(Card(NINE, HEARTS));
+  p->add_card(Card(TEN, HEARTS));
+  p->add_card(Card(ACE, SPADES));  
+
+  Card upcard(ACE, HEARTS);
+  p->add_and_discard(upcard);
+
+  Card led = p->lead_card(trump);
+  ASSERT_TRUE(led.is_right_bower(trump));
+
+  delete p;
+}
+
 TEST_MAIN()
+
 
