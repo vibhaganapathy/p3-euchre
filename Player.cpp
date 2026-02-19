@@ -106,7 +106,7 @@ public:
     
     else {
       for (size_t i = 1; i < hand.size(); i++) {
-        if (Card_less(hand[i], hand[pick], ledCard, trump)) {
+        if (Card_less(hand[i], hand[pick], trump)) {
           pick = i;
         }
       }
