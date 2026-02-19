@@ -1,6 +1,5 @@
 #include "Player.hpp"
 #include "unit_test_framework.hpp"
-#include <iostream>
 
 using namespace std;
 
@@ -195,9 +194,9 @@ TEST(playLowest) {
   Card led(NINE, HEARTS);
   Card played = p->play_card(led, trump);
 
-  ASSERT_EQUAL(played, Card(TEN, SPADES));
-
   delete p;
+
+  ASSERT_EQUAL(played, Card(TEN, SPADES));
 }
 
 TEST(leftBowerFollow) {
@@ -241,27 +240,26 @@ TEST(discardSpade) {
 
 TEST(discardUpcard) {
   Player *p = Player_factory("Alice", "Simple");
-  Suit trump = HEARTS;
 
-  p->add_card(Card(TEN, trump));
-  p->add_card(Card(QUEEN, trump));
-  p->add_card(Card(KING, trump));
-  p->add_card(Card(ACE, trump));
-  p->add_card(Card(JACK, trump));
+  Card upcard(TEN, CLUBS);
 
-  Card upcard(NINE, trump);
+  p->add_card(Card(ACE, SPADES));
+  p->add_card(Card(KING, SPADES));
+  p->add_card(Card(QUEEN, SPADES));
+  p->add_card(Card(JACK, SPADES));
+  p->add_card(Card(NINE, DIAMONDS));
+
   p->add_and_discard(upcard);
+  
+  Card led(ACE, DIAMONDS);
+  Card played = p->play_card(led, CLUBS);
 
-  Card c1 = p->lead_card(trump);
-  Card c2 = p->lead_card(trump);
-  Card c3 = p->lead_card(trump);
-  Card c4 = p->lead_card(trump);
-  Card c5 = p->lead_card(trump);
+  delete p; 
 
-  ASSERT_EQUAL(c5, Card(TEN, trump));
-
-  delete p;
+  ASSERT_EQUAL(played, Card(JACK, SPADES)); 
+  
 }
+
 
 TEST(discardTrump) {
   Player *p = Player_factory("Alice", "Simple");
