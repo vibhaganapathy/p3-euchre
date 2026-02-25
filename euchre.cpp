@@ -303,20 +303,20 @@ static int printUsage() {
 int main(int argc, char **argv) {
   // Check for correct num of args
   if (argc != 12){
-    printUsage();
+    return printUsage();
   }
 
   // Validate args
   string pack_filename = argv[1];
   string shuffleDeck = argv[2];
   int pointsToWin = stoi(argv[3]);
-
-  if ((shuffleDeck != "shuffle") || (shuffleDeck != "noshuffle")){
-    printUsage();
+  
+  if (shuffleDeck != "shuffle" && shuffleDeck != "noshuffle") {
+    return printUsage();
   }
 
-  if ((pointsToWin < 1) || (pointsToWin > 100)){
-    printUsage();
+  if (pointsToWin < 1 || pointsToWin > 100) {
+    return printUsage();
   }
 
   // Open Pack
@@ -332,8 +332,8 @@ int main(int argc, char **argv) {
     string name = argv[i];
     string type = argv[i+1];
 
-    if ((type != "Simple") || (type != "Human")){
-      printUsage();
+    if (type != "Simple" && type != "Human"){
+      return printUsage();
     }
 
     players.push_back(Player_factory(name, type));
@@ -348,6 +348,14 @@ int main(int argc, char **argv) {
   for (size_t i = 0; i < players.size(); ++i) {
     delete players[i];
   }
+
+  // In case pack file doesn’t open
+  if (!packIn.is_open()) {
+    cout << "Error opening " << pack_filename << endl;
+    return 1;
+  }
+
+  return 0;
 }
 
 
