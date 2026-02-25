@@ -332,7 +332,7 @@ int main(int argc, char **argv) {
     string name = argv[i];
     string type = argv[i+1];
 
-    if ((type != "Simple") && (type != "Human")){
+    if ((type != "Simple") || (type != "Human")){
       printUsage();
     }
 
@@ -349,4 +349,5 @@ int main(int argc, char **argv) {
     delete players[i];
   }
 }
+
 
