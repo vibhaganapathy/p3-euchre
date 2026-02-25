@@ -18,7 +18,8 @@ public:
     hand.push_back(c);
   }
 
-  bool make_trump(const Card &upcard, bool isDealer, int round, Suit &orderUpSuit) const override {
+  bool make_trump(const Card &upcard, bool isDealer, int round,
+                  Suit &orderUpSuit) const override {
     assert(round == 1 || round == 2);
 
     if (round == 1) {
@@ -96,14 +97,12 @@ public:
     if (canFollow) {
       pick = -1;
       for (size_t i = 0; i < hand.size(); i++) {
-        if (hand[i].get_suit(trump) == ledSuit) {
-          if (pick == -1 || Card_less(hand[pick], hand[i], ledCard, trump)) {
-            pick = i;
-          }
+        if (hand[i].get_suit(trump) == ledSuit &&
+        (pick == -1 || Card_less(hand[pick], hand[i], ledCard, trump))) {
+          pick = i;
         }
       }
     }
-    
     else {
       for (size_t i = 1; i < hand.size(); i++) {
         if (Card_less(hand[i], hand[pick], trump)) {
@@ -200,7 +199,8 @@ private:
 
   void printHand() const {
     for (size_t i = 0; i < hand.size(); i++) {
-      cout << "Human player " << name << "'s hand: " << "[" << i << "] " << hand[i] << endl;
+      cout << "Human player " << name << "'s hand: "
+           << "[" << i << "] " << hand[i] << endl;
     }
   }
 };
