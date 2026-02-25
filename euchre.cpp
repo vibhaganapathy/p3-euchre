@@ -293,14 +293,60 @@ bool make_trump(Suit &trumpOut, int &makerOut) {
   }
 };
 
-//static void printUsage() {
-//  cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
-//  << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
-//  << "NAME4 TYPE4" << endl;
-//}
+static int printUsage() {
+  cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
+  << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
+  << "NAME4 TYPE4" << endl;
+  return 1;
+}
 
-//int main(int argc, char **argv) {
-  // Read command line args and check for errors
-  //Game game(/* game details */);
-  //game.play();
-//}
+int main(int argc, char **argv) {
+  // Check for correct num of args
+  if (argc != 12){
+    printUsage();
+  }
+
+  // Validate args
+  string pack_filename = argv[1];
+  string shuffleDeck = argv[2];
+  int pointsToWin = stoi(argv[3]);
+
+  if ((shuffleDeck != "shuffle") || (shuffleDeck != "noshuffle")){
+    printUsage();
+  }
+
+  if ((pointsToWin < 1) || (pointsToWin > 100)){
+    printUsage();
+  }
+
+  // Open Pack
+  ifstream packIn(pack_filename);
+  if (!packIn.is_open()){
+    cout << "Error opening " << pack_filename << endl;
+  }
+  Pack pack(packIn);
+
+  // Initialize players
+  vector<Player*> players;
+  for (int i=4; i<12; i+=2){
+    string name = argv[i];
+    string type = argv[i+1];
+
+    if ((type != "Simple") && (type != "Human")){
+      printUsage();
+    }
+
+    players.push_back(Player_factory(name, type));
+  }
+
+  // Run game
+  bool doShuffle = (shuffleDeck == "shuffle");
+  Game game(pack, doShuffle, pointsToWin, players);
+  game.play();
+
+  // Delete players
+  for (size_t i = 0; i < players.size(); ++i) {
+    delete players[i];
+  }
+}
+
