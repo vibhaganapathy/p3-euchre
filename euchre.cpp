@@ -307,7 +307,7 @@ int main(int argc, char **argv) {
     }
     cout << argv[i];
   }
-  cout << endl;
+  cout << " " << endl;
 
   // Check for correct num of args
   if (argc != 12){
@@ -364,6 +364,5 @@ int main(int argc, char **argv) {
 
   return 0;
 }
-
 
 
