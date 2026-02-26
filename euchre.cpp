@@ -293,14 +293,22 @@ bool make_trump(Suit &trumpOut, int &makerOut) {
   }
 };
 
-static int printUsage() {
+int printUsage() {
   cout << "Usage: euchre.exe PACK_FILENAME [shuffle|noshuffle] "
-  << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 "
-  << "NAME4 TYPE4" << endl;
+       << "POINTS_TO_WIN NAME1 TYPE1 NAME2 TYPE2 NAME3 TYPE3 NAME4 TYPE4"
+       << endl;
   return 1;
 }
 
 int main(int argc, char **argv) {
+  for (int i = 0; i < argc; ++i) {
+    if (i > 0) {
+      cout << " ";
+    }
+    cout << argv[i];
+  }
+  cout << endl;
+
   // Check for correct num of args
   if (argc != 12){
     return printUsage();
@@ -349,7 +357,6 @@ int main(int argc, char **argv) {
     delete players[i];
   }
 
-  // In case pack file doesn’t open
   if (!packIn.is_open()) {
     cout << "Error opening " << pack_filename << endl;
     return 1;
@@ -357,5 +364,6 @@ int main(int argc, char **argv) {
 
   return 0;
 }
+
 
 
